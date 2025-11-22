@@ -45,12 +45,12 @@ public class AssignResponseDto {
     }
 
 
-    public static AssignResponseDto map(Long plantId, Long dumpsterId, Long employeeId, LocalDate date) {
+    public static AssignResponseDto map(AssignmentRecord record) {
         AssignResponseDto response = new AssignResponseDto();
-        response.setPlantId(plantId);
-        response.setDumpsterId(dumpsterId);
-        response.setEmployeeId(employeeId);
-        response.setDate(date);
+        response.setPlantId(record.getPlant().getId());
+        response.setDumpsterId(record.getDumpsterId());
+        response.setEmployeeId(record.getEmployeeId());
+        response.setDate(record.getDate());
         return response;
     }
 
@@ -58,10 +58,7 @@ public class AssignResponseDto {
     public static List<AssignResponseDto> map(List<AssignmentRecord> assignmentRecords) {
         List<AssignResponseDto> response = new ArrayList<>();
         for (AssignmentRecord record : assignmentRecords) {
-            response.add(map(record.getPlant().getId(), 
-            		record.getDumpsterId(), 
-            		record.getEmployeeId(), 
-            		record.getDate()));
+            response.add(map(record));
         }
         return response;
     }    

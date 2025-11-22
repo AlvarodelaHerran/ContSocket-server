@@ -42,6 +42,7 @@ public class RecyclingPlant {
     public int getCurrentFill() { return currentFill; }
 
     public List<AssignmentRecord> getAssignments() { return assignments; }
+    public void setCurrentFill(int currentFill) { this.currentFill = currentFill; }
 
     public void addAssignment(AssignmentRecord record) {
         assignments.add(record);

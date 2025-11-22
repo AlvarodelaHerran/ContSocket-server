@@ -7,6 +7,7 @@ import com.example.contsocket.entity.RecyclingPlant;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Service
 public class RecyclingPlantService {
@@ -20,17 +21,35 @@ public class RecyclingPlantService {
         RecyclingPlant r1 = new RecyclingPlant("ContSocket", "Bilbao", 48010, 5000);
         createPlant(r1);
 
-        AssignmentRecord a1 = new AssignmentRecord(1L, r1, 101L, LocalDate.now(), 100);
-        assignDumpsterToPlant(a1.getDumpsterId(), a1.getEmployeeId(), a1.getDate(), a1.getFilling());
-    }
+        AssignmentRecord a1 = new AssignmentRecord(1L, r1, 101L, LocalDate.now().minusDays(3), 100);
 
-    public List<RecyclingPlant> getAllPlants() {
-        return new ArrayList<>(plants.values());
+        AssignmentRecord a2 = new AssignmentRecord(1L, r1, 300L, LocalDate.now(), 300);
+        assignDumpsterToPlant(a1.getDumpsterId(), a1.getEmployeeId(), a1.getDate(), a1.getFilling());
+        assignDumpsterToPlant(a2.getDumpsterId(), a2.getEmployeeId(), a2.getDate(), a2.getFilling());
     }
 
     public RecyclingPlant createPlant(RecyclingPlant plant) {
         plant.setId(1L);
         plants.put(plant.getId(), plant);
+        return plant;
+    }
+    
+
+    public RecyclingPlant getPlant() {
+    	RecyclingPlant plant = plants.get(1L);
+
+        List<AssignmentRecord> filteredAssignments = plant.getAssignments()
+                .stream()
+                .filter(a -> a.getDate().equals(LocalDate.now()))
+                .collect(Collectors.toList());
+        
+        plant.getAssignments().clear();
+        plant.getAssignments().addAll(filteredAssignments);
+        plant.setCurrentFill(filteredAssignments
+        		.stream()
+        		.mapToInt(AssignmentRecord::getFilling)
+                .sum());
+
         return plant;
     }
 
@@ -48,13 +67,13 @@ public class RecyclingPlantService {
     public Integer getRemainingCapacity(LocalDate date) {
         RecyclingPlant plant = plants.get(1L);
         if (plant == null) return null;
-        int maxCapacity = plant.getMaxCapacity();
-        for (AssignmentRecord record : assignments.values()) {
-            if (record.getPlant().getId().equals(1L) && record.getDate().equals(date)) {
-            	maxCapacity -= record.getFilling();
-            }
-        }
 
-        return maxCapacity;
+        int usedCapacity = assignments.values()
+                .stream()
+                .filter(a -> a.getDate().equals(date))
+                .mapToInt(AssignmentRecord::getFilling)
+                .sum();
+
+        return plant.getMaxCapacity() - usedCapacity;
     }
 }

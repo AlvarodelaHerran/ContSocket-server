@@ -2,9 +2,12 @@ package com.example.consocket.server;
 
 import com.example.contsocket.service.RecyclingPlantService;
 import com.example.contsocket.entity.AssignmentRecord;
+import com.example.contsocket.entity.RecyclingPlant;
 import com.example.contsocket.dto.RecyclingPlantDto;
 import com.example.contsocket.dto.AssignRequestDto;
+import com.example.contsocket.dto.AssignResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,6 +23,7 @@ public class ClientHandler implements Runnable {
     public ClientHandler(Socket client, RecyclingPlantService service) {
         this.client = client;
         this.service = service;
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @Override
@@ -42,12 +46,9 @@ public class ClientHandler implements Runnable {
     private String handleCommand(String cmd) {
         try {
 
-            if (cmd.equals("LIST_PLANTS")) {
-                List<RecyclingPlantDto> dtos = service.getAllPlants()
-                        .stream()
-                        .map(RecyclingPlantDto::map)
-                        .collect(Collectors.toList());
-                return objectMapper.writeValueAsString(dtos);
+            if (cmd.equals("PLANT")) {
+                RecyclingPlant plant = service.getPlant();
+                return objectMapper.writeValueAsString(RecyclingPlantDto.map(plant));
             }
 
             if (cmd.startsWith("ADD_ASSIGNMENT")) {
@@ -66,14 +67,7 @@ public class ClientHandler implements Runnable {
                         new ErrorResponse("Plant not found")
                     );
                 }
-
-                AssignRequestDto responseDto = new AssignRequestDto(
-                        record.getPlant().getId(),
-                        record.getDumpsterId(),
-                        record.getEmployeeId(),
-                        record.getFilling()
-                );
-                return objectMapper.writeValueAsString(responseDto);
+                return objectMapper.writeValueAsString(AssignResponseDto.map(record));
             }if (cmd.startsWith("GET_CAPACITY")) {
                 try {
                     String[] parts = cmd.split(";");
