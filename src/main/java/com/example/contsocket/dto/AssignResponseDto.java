@@ -7,18 +7,9 @@ import java.util.List;
 import com.example.contsocket.entity.AssignmentRecord;
 
 public class AssignResponseDto {
-    private Long plantId;
     private Long dumpsterId;
     private Long employeeId;
     private LocalDate date;
-
-    public Long getPlantId() {
-        return plantId;
-    }
-
-    public void setPlantId(Long plantId) {
-        this.plantId = plantId;
-    }
 
     public Long getDumpsterId() {
         return dumpsterId;
@@ -47,7 +38,6 @@ public class AssignResponseDto {
 
     public static AssignResponseDto map(AssignmentRecord record) {
         AssignResponseDto response = new AssignResponseDto();
-        response.setPlantId(record.getPlant().getId());
         response.setDumpsterId(record.getDumpsterId());
         response.setEmployeeId(record.getEmployeeId());
         response.setDate(record.getDate());

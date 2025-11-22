@@ -33,7 +33,7 @@ public class ClientHandler implements Runnable {
             PrintWriter out = new PrintWriter(client.getOutputStream(), true)
         ) {
             out.println("CONNECTED");
-
+            
             String line;
             while ((line = in.readLine()) != null) {
                 out.println(handleCommand(line));
@@ -53,9 +53,9 @@ public class ClientHandler implements Runnable {
 
             if (cmd.startsWith("ADD_ASSIGNMENT")) {
                 String[] parts = cmd.split(";");
-                Long dumpsterId = Long.parseLong(parts[2].split("=")[1]);
-                Long employeeId = Long.parseLong(parts[3].split("=")[1]);
-                int filling = Integer.parseInt(parts[4].split("=")[1]);
+                Long dumpsterId = Long.parseLong(parts[1].split("=")[1]);
+                Long employeeId = Long.parseLong(parts[2].split("=")[1]);
+                int filling = Integer.parseInt(parts[3].split("=")[1]);
                 AssignmentRecord record = service.assignDumpsterToPlant(
                 		dumpsterId, 
                 		employeeId, 
