@@ -5,7 +5,6 @@ import java.util.List;
 
 public class RecyclingPlant {
 
-    private Long id;
     private String name;
     private int postalCode;
     private String location;
@@ -23,9 +22,6 @@ public class RecyclingPlant {
         this.maxCapacity = maxCapacity;
         this.currentFill = 0;
     }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class RecyclingPlantService {
 
-    private final Map<Long, RecyclingPlant> plants = new HashMap<>();
+    private final Map<String, RecyclingPlant> plants = new HashMap<>();
     private final Map<Long, AssignmentRecord> assignments = new HashMap<>();
 
     private final AtomicLong assignmentIdGenerator = new AtomicLong(0);
@@ -29,14 +29,13 @@ public class RecyclingPlantService {
     }
 
     public RecyclingPlant createPlant(RecyclingPlant plant) {
-        plant.setId(1L);
-        plants.put(plant.getId(), plant);
+        plants.put(plant.getName(), plant);
         return plant;
     }
     
 
     public RecyclingPlant getPlant() {
-    	RecyclingPlant plant = plants.get(1L);
+    	RecyclingPlant plant = plants.get("ContSocket");
 
         List<AssignmentRecord> filteredAssignments = plant.getAssignments()
                 .stream()
@@ -54,7 +53,7 @@ public class RecyclingPlantService {
     }
 
     public AssignmentRecord assignDumpsterToPlant(Long dumpsterId, Long employeeId, LocalDate date, int filling) {
-        RecyclingPlant plant = plants.get(1L);
+        RecyclingPlant plant = plants.get("ContSocket");
 
         AssignmentRecord record = new AssignmentRecord(dumpsterId, plant, employeeId, date, filling);
         long assignmentId = assignmentIdGenerator.incrementAndGet();
@@ -65,7 +64,7 @@ public class RecyclingPlantService {
     }
 
     public Integer getRemainingCapacity(LocalDate date) {
-        RecyclingPlant plant = plants.get(1L);
+        RecyclingPlant plant = plants.get("ContSocket");
         if (plant == null) return null;
 
         int usedCapacity = assignments.values()
