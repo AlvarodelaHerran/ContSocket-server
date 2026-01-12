@@ -21,18 +21,26 @@ public class RecyclingPlantService {
         RecyclingPlant r1 = new RecyclingPlant("ContSocket", "Bilbao", 48010, 5000);
         createPlant(r1);
 
-        AssignmentRecord a1 = new AssignmentRecord(1L, r1, 101L, LocalDate.now().minusDays(3), 100);
+        AssignmentRecord a1 = new AssignmentRecord(r1, LocalDate.now().minusDays(3), 100, 1);
+        AssignmentRecord a2 = new AssignmentRecord(r1, LocalDate.now(), 300, 1);
 
-        AssignmentRecord a2 = new AssignmentRecord(1L, r1, 300L, LocalDate.now(), 300);
-        assignDumpsterToPlant(a1.getDumpsterId(), a1.getEmployeeId(), a1.getDate(), a1.getFilling());
-        assignDumpsterToPlant(a2.getDumpsterId(), a2.getEmployeeId(), a2.getDate(), a2.getFilling());
+        r1.addAssignment(a1);
+        r1.addAssignment(a2);
+
+        createAssignment(a1);
+        createAssignment(a2);
+        
     }
 
     public RecyclingPlant createPlant(RecyclingPlant plant) {
         plants.put(plant.getName(), plant);
         return plant;
     }
-    
+
+    public AssignmentRecord createAssignment(AssignmentRecord assignmentRecord) {
+        assignments.put(assignmentIdGenerator.incrementAndGet(), assignmentRecord);
+        return assignmentRecord;
+    }
 
     public RecyclingPlant getPlant() {
     	RecyclingPlant plant = plants.get("ContSocket");
@@ -51,13 +59,12 @@ public class RecyclingPlantService {
 
         return plant;
     }
-
-    public AssignmentRecord assignDumpsterToPlant(Long dumpsterId, Long employeeId, LocalDate date, int filling) {
+    
+    public AssignmentRecord assignDumpsterToPlant( int totalDumpster, int filling) {
         RecyclingPlant plant = plants.get("ContSocket");
 
-        AssignmentRecord record = new AssignmentRecord(dumpsterId, plant, employeeId, date, filling);
-        long assignmentId = assignmentIdGenerator.incrementAndGet();
-        assignments.put(assignmentId, record);
+        AssignmentRecord record = new AssignmentRecord(plant, LocalDate.now(), filling, totalDumpster);
+        assignments.put(assignmentIdGenerator.incrementAndGet(), record);
 
         plant.addAssignment(record);
         return record;

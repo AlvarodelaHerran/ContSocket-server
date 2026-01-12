@@ -1,8 +1,5 @@
 package com.example.contsocket.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.contsocket.entity.RecyclingPlant;
 
 public class RecyclingPlantDto {
@@ -12,7 +9,6 @@ public class RecyclingPlantDto {
     private int postalCode;
     private int maxCapacity;
     private int currentFill;
-    private List<AssignResponseDto> assignments = new ArrayList<>();
 
     public RecyclingPlantDto() {}
 
@@ -23,16 +19,6 @@ public class RecyclingPlantDto {
         this.maxCapacity = maxCapacity;
         this.currentFill = currentFill;
         this.currentFill = currentFill;
-    }
-
-    public RecyclingPlantDto(String name, String location, int postalCode, int maxCapacity, int currentFill, List<AssignResponseDto> assignments) {
-        this.name = name;
-        this.location = location;
-        this.postalCode = postalCode;
-        this.maxCapacity = maxCapacity;
-        this.currentFill = currentFill;
-        this.currentFill = currentFill;
-        this.assignments = assignments;
     }
 
     public String getName() { return name; }
@@ -50,17 +36,13 @@ public class RecyclingPlantDto {
     public int getCurrentFill() { return currentFill; }
     public void setCurrentFill(int currentFill) { this.currentFill = currentFill; }
 
-    public List<AssignResponseDto> getAssignments() { return assignments; }
-    public void addAssignment(AssignResponseDto assignments) { this.assignments.add(assignments); }
-
     public static RecyclingPlantDto map(RecyclingPlant plant) {
-    	return new RecyclingPlantDto(
+        return new RecyclingPlantDto(
             plant.getName(),
             plant.getLocation(),
             plant.getPostalCode(),
             plant.getMaxCapacity(),
-            plant.getCurrentFill(),
-            AssignResponseDto.map(plant.getAssignments())
+            plant.getCurrentFill()
         );
     }
 }
