@@ -21,8 +21,8 @@ public class RecyclingPlantService {
         RecyclingPlant r1 = new RecyclingPlant("ContSocket", "Bilbao", 48010, 5000);
         createPlant(r1);
 
-        AssignmentRecord a1 = new AssignmentRecord(r1, LocalDate.now().minusDays(3), 100, 1);
-        AssignmentRecord a2 = new AssignmentRecord(r1, LocalDate.now(), 300, 1);
+        AssignmentRecord a1 = new AssignmentRecord(r1, LocalDate.now().minusDays(3), 1000, 1);
+        AssignmentRecord a2 = new AssignmentRecord(r1, LocalDate.now(), 1100, 1);
 
         r1.addAssignment(a1);
         r1.addAssignment(a2);
